@@ -65,29 +65,38 @@
     )
   )
 
-;main function. Finds the k best sentences in the text file given as input
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-    (let [text (slurp (first args))
-           tokens (tokenize text)
+
+(defn summarize-text [text percentage]
+    (let [tokens (tokenize text)
           word-counts (count-repetitions-of-each-item-in-collection tokens)
           sentences (get-sentences text)]
-      (println
         (let [ sentence-scores (map (fn [sentence] (sentence-score sentence word-counts)) sentences)
                indexed-sentence-scores (map vector (range (count sentence-scores)) sentence-scores)
                sorted-sentence-scores (sort-by second > indexed-sentence-scores)
                number-of-sentences-in-summarized-text
-               (math/ceil
-                 (if (> (count args) 1) (* (count sentences) (Double/parseDouble (last args))) (* (count sentences) 0.5)))
+               (math/ceil (* (count sentences) percentage))
                ]
           (clojure.string/join "" (map
-             (fn [x] (nth sentences x))
-             (map (fn [x] (first x))
-               (sort-by first (take number-of-sentences-in-summarized-text sorted-sentence-scores)))
-             )
+                                    (fn [x] (nth sentences x))
+                                    (map (fn [x] (first x))
+                                      (sort-by first (take number-of-sentences-in-summarized-text sorted-sentence-scores)))
+                                    )
             )
           )
+
+      )
+  )
+
+
+;main function. Finds the k best sentences in the text file given as input
+(defn -main
+  "The command-line interface to the summarizer"
+  [& args]
+    (let [text (slurp (first args))
+          percentage (Double/parseDouble (if (> (count args) 1) (last args) 0.5))
+       ]
+      (println
+        (summarize-text text percentage)
         )
       )
   )
