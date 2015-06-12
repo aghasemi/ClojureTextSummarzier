@@ -1,4 +1,4 @@
-(defproject summarizer "0.1.0-SNAPSHOT"
+(defproject org.clojars.alireza/summarizer "0.1.0-SNAPSHOT"
   :description "A simple text summarizer software and library written in Clojure"
   :url "https://github.com/aghasemi/ClojureTextSummarzier"
   :license {:name "Eclipse Public License"
